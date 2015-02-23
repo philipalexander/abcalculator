@@ -1,0 +1,133 @@
+<html>
+<head>
+	<script type="text/javascript" src="jquery-1.11.1.min.js"></script>
+	<script>
+		$( document ).ready(function() {
+			// Function to convert a number to currency format
+			var makeDollars = function(numDecimal){
+				var numDollars = '$' + numDecimal.toFixed(2).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+				return numDollars;
+			}
+
+			// Calculate a new value on keyup
+			$( "input" ).keyup(function() {
+				var new_trials = $("#new_trials").val();
+				var trial_to_paid_conversion = $("#trial_to_paid_conversion").val();
+				// Note: tsheets alv = 18 months * $70 per month
+				// TODO: if used by non TSheets, change the default value
+				var average_lifetime_value = $("#average_lifetime_value").val();
+				
+				var time_period = $("#time_period").val();
+				var total_return = new_trials * (trial_to_paid_conversion/100) * average_lifetime_value * time_period;
+
+				$("#total_return").html(makeDollars(total_return));
+				var testVar = makeDollars(average_lifetime_value);
+				console.log('check money ' + testVar);
+				console.log('check values ' +new_trials+" "+trial_to_paid_conversion+" "+average_lifetime_value+" "+time_period);
+			});
+		});
+	</script>
+	<style>
+		body {
+			margin: 0;
+			padding: 0;
+			font-family: "helvetica neue", helvetica, arial, sans-serif;
+		}
+		.page-section {
+			background: #bed2dd;
+			border-top: 1px solid #9eb7c5;
+			border-bottom: 1px solid #9eb7c5;
+			padding: 30px 0;
+		}
+		.page-section.lighter-accent {
+			background: #fff;
+			border: 0;
+		}
+		.highlight {
+			background: #fff;
+			height: 5px;
+		}
+		.ab-calc-input {
+			background: none;
+			border: 0px;
+			border-bottom: 1px solid #9eb7c5;
+			
+			outline: none;
+		}
+		.input-holder {
+			list-style-type: none;
+			margin: 0 auto;
+			max-width: 650px;
+			padding: 0;
+		}
+		.input-holder label {
+			color: #647178;
+			display: block;
+			font-size: 14px;
+			font-weight: bold;
+			line-height: 24px;
+		}
+		.input-holder li {
+			float: left;
+			padding: 10px;
+			position: relative;
+			width: 140px;
+		}
+		.total {
+			background: #fff;
+			padding: 15px 30px;
+			margin: 36px auto;
+			max-width: 200px;
+		}
+		.input-holder {overflow:hidden;}
+		.ab-calc-input {max-width: 100%;}
+		.input-holder label,
+		.ab-calc-input,
+		h1, .total{text-align: center;}
+		.ab-calc-input, h1, .total{
+			color:#525e65;
+			font-size: 36px;
+			font-weight: 200;
+		}
+		.input-unit:after {
+			color: #525e65;
+			position: absolute;
+			font-size: 24px;
+		}
+		#percentage:after {
+			content: '%';
+			right: 10px;
+		}
+		#dollars:after {
+			content: '$';
+			left: 10px;
+		}
+	</style>
+</head>
+<body>
+	<div class="highlight"></div>
+	<section class="page-section">
+		<h1 class="title">How much will this A/B test produce?</h1>
+		
+		<ul class="input-holder">
+			<li>
+				<input type="text" id="new_trials" class="ab-calc-input" placeholder="0"/>
+				<label for="new_trials">New trials attributed to the test in this time period</label>
+			</li>
+			<li>
+				<span id="percentage" class="input-unit"><input type="text" id="trial_to_paid_conversion" class="ab-calc-input" placeholder=""/></span>
+				<label for="trial_to_paid_conversion">Conversion Rate from trial to signup</label>
+			</li>
+			<li>
+				<span id="dollars" class="input-unit"><input type="text" id="average_lifetime_value" class="ab-calc-input" value="1260" /></span>
+				<label for="average_lifetime_value">Average Lifetime Value (average lifetime x average payment)</label>
+			</li>
+			<li>
+				<input type="text" id="time_period" class="ab-calc-input" value="1"/>
+				<label for="time_period">Time period (how many months this test will produce results)</label>
+			</li>
+		</ul>
+		<div id="total_return" class="total">$00.0</div>
+	</section>
+</body>
+</html>
